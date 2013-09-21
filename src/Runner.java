@@ -35,7 +35,8 @@ public class Runner {
 		g.setLocation(n1);
 		//recursivePrint(g.getCurrent(), new HashSet<Node<String>>());
 		ArrayList<Edge<String>> best = new ArrayList<Edge<String>>();
-		traceRoute(g.getCurrent(), n8, new ArrayList<Edge<String>>(), best);
+		traceRoute(g.getCurrent(), n8, new ArrayList<Edge<String>>(), best, new HashSet<Node<String>>());
+		System.out.println(best);
 	}
 	private static void recursivePrint(Node<String> cur, HashSet<Node<String>> checked) {
 		System.err.println(cur);
@@ -51,13 +52,31 @@ public class Runner {
 			  Node<String> root
 			, Node<String> dest
 			, ArrayList<Edge<String>> path
-			, ArrayList<Edge<String>> best) {
-		if(root.equals(dest)) 
-			return;
-		if(path.size() > best.size() && best.size() != 0) {
-			path.remove(root);
+			, ArrayList<Edge<String>> best
+			, HashSet<Node<String>> checked) {
+		System.out.println(root);
+		System.out.println(path);
+		System.out.println(best);
+		checked.add(root);
+		if(root.equals(dest)) {
+			if(path.size() < best.size()) {
+				best.clear();
+				best.addAll(path);
+			}
+			checked.remove(root);
 			return;
 		}
-		
+		if(path.size() > best.size() && best.size() != 0) {
+			checked.remove(root);
+			return;
+		}
+		for(Edge<String> e : root.getEdges()) {
+			if(path.contains(e.getOther(root)))
+				continue;
+			path.add(e);
+			traceRoute(e.getOther(root), dest, path, best, checked);
+			path.remove(e);
+		}
+		path.remove(root);
 	}
 }
