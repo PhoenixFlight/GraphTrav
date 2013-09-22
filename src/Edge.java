@@ -13,4 +13,7 @@ public class Edge<T> {
 	public Node<T> getLeft() { return left; }
 	public Node<T> getRight() { return right; }
 	public Node<T> getOther(Node<T> given) { return given.equals(left) ? right : left; }
+	public String toString() {
+		return left + " <---> " + right;
+	}
 }
